@@ -1,0 +1,58 @@
+# Comentarios para explicar el código
+# Esta es una clase base que representa una persona
+class Persona:
+    # Constructor que inicializa el nombre y la edad
+    def __init__(self, nombre, edad):
+        self.nombre = nombre
+        self.edad = edad
+
+    # Método para mostrar la información de la persona
+    def mostrar_informacion(self):
+        print(f"Nombre: {self.nombre}, Edad: {self.edad}")
+
+# Esta es una clase derivada que representa a un estudiante, que hereda de Persona
+class Estudiante(Persona):
+    # Constructor que inicializa el nombre, la edad y la matrícula del estudiante
+    def __init__(self, nombre, edad, matricula):
+        super().__init__(nombre, edad)
+        self.matricula = matricula
+
+    # Método sobrescrito para mostrar la información del estudiante
+    def mostrar_informacion(self):
+        print(f"Nombre: {self.nombre}, Edad: {self.edad}, Matrícula: {self.matricula}")
+
+# Esta clase demuestra el uso de la encapsulación
+class Banco:
+    def __init__(self, balance):
+        self.__balance = balance  # Atributo privado
+
+    def mostrar_balance(self):
+        print(f"Balance: ${self.__balance}")
+
+    def depositar(self, cantidad):
+        if cantidad > 0:
+            self.__balance += cantidad
+
+    def retirar(self, cantidad):
+        if 0 < cantidad <= self.__balance:
+            self.__balance -= cantidad
+
+# Función polimórfica que puede aceptar objetos de diferentes tipos
+def mostrar_informacion(persona):
+    persona.mostrar_informacion()
+
+# Crear instancias y usar las clases
+persona = Persona("Juan", 45)
+estudiante = Estudiante("Ana", 20, "S1234")
+banco = Banco(1000)
+
+# Mostrar información de las instancias
+persona.mostrar_informacion()
+estudiante.mostrar_informacion()
+
+# Uso de la clase Banco para demostrar encapsulación
+banco.mostrar_balance()
+banco.depositar(500)
+banco.mostrar_balance()
+banco.retirar(300)
+banco.mostrar_balance()
