@@ -1,0 +1,20 @@
+class Recurso:
+    def __init__(self, nombre):
+        # El constructor (__init__) se llama cuando se crea una instancia de la clase
+        # Inicializamos el atributo 'nombre' del objeto
+        self.nombre = nombre
+        print(f"Recurso '{self.nombre}' creado.")
+
+    def __del__(self):
+        # El destructor (__del__) se llama cuando la instancia de la clase se destruye
+        # Realizamos alguna forma de limpieza aquí
+        print(f"Recurso '{self.nombre}' destruido.")
+
+# Crear una instancia de la clase Recurso
+recurso1 = Recurso("Base de datos")
+
+# Aquí podemos realizar operaciones con el recurso
+
+# El recurso se destruye automáticamente cuando el objeto 'recurso1' sale del alcance
+# o se elimina explícitamente con 'del recurso1'
+del recurso1
