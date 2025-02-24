@@ -1,0 +1,152 @@
+import os
+
+class Producto:
+    def __init__(self, id, nombre, cantidad, precio):
+        self.id = id
+        self.nombre = nombre
+        self.cantidad = cantidad
+        self.precio = precio
+
+    def get_id(self):
+        return self.id
+
+    def get_nombre(self):
+        return self.nombre
+
+    def get_cantidad(self):
+        return self.cantidad
+
+    def get_precio(self):
+        return self.precio
+
+    def set_nombre(self, nombre):
+        self.nombre = nombre
+
+    def set_cantidad(self, cantidad):
+        self.cantidad = cantidad
+
+    def set_precio(self, precio):
+        self.precio = precio
+
+class Inventario:
+    def __init__(self):
+        self.productos = []
+        self.archivo = 'inventario.txt'
+        self.cargar_productos_desde_archivo()
+
+    def añadir_producto(self, producto):
+        if not any(p.get_id() == producto.get_id() for p in self.productos):
+            self.productos.append(producto)
+            self.guardar_productos_en_archivo()
+            print(f"Producto {producto.get_nombre()} añadido exitosamente.")
+        else:
+            print(f"Error: Ya existe un producto con el ID {producto.get_id()}")
+
+    def eliminar_producto(self, id):
+        self.productos = [p for p in self.productos if p.get_id() != id]
+        self.guardar_productos_en_archivo()
+        print(f"Producto con ID {id} eliminado exitosamente.")
+
+    def actualizar_producto(self, id, cantidad=None, precio=None):
+        for producto in self.productos:
+            if producto.get_id() == id:
+                if cantidad is not None:
+                    producto.set_cantidad(cantidad)
+                if precio is not None:
+                    producto.set_precio(precio)
+                self.guardar_productos_en_archivo()
+                print(f"Producto con ID {id} actualizado exitosamente.")
+                break
+        else:
+            print(f"Producto con ID {id} no encontrado.")
+
+    def buscar_producto(self, nombre):
+        resultados = [p for p in self.productos if nombre.lower() in p.get_nombre().lower()]
+        return resultados
+
+    def mostrar_productos(self):
+        for producto in self.productos:
+            print(f"ID: {producto.get_id()}, Nombre: {producto.get_nombre()}, Cantidad: {producto.get_cantidad()}, Precio: {producto.get_precio()}")
+
+    def cargar_productos_desde_archivo(self):
+        try:
+            if os.path.exists(self.archivo):
+                with open(self.archivo, 'r') as file:
+                    for linea in file:
+                        id, nombre, cantidad, precio = linea.strip().split(',')
+                        producto = Producto(id, nombre, int(cantidad), float(precio))
+                        self.productos.append(producto)
+                print("Inventario cargado desde el archivo.")
+            else:
+                print("Archivo de inventario no encontrado. Se creará un nuevo archivo al guardar productos.")
+        except FileNotFoundError:
+            print("Error: El archivo de inventario no fue encontrado.")
+        except PermissionError:
+            print("Error: Permiso denegado para leer el archivo de inventario.")
+        except Exception as e:
+            print(f"Error al cargar el archivo de inventario: {e}")
+
+    def guardar_productos_en_archivo(self):
+        try:
+            with open(self.archivo, 'w') as file:
+                for producto in self.productos:
+                    file.write(f"{producto.get_id()},{producto.get_nombre()},{producto.get_cantidad()},{producto.get_precio()}\n")
+            print("Inventario guardado en el archivo.")
+        except PermissionError:
+            print("Error: Permiso denegado para escribir en el archivo de inventario.")
+        except Exception as e:
+            print(f"Error al guardar el archivo de inventario: {e}")
+
+def menu():
+    inventario = Inventario()
+
+    while True:
+        print("\nMenú de Inventario")
+        print("1. Añadir producto")
+        print("2. Eliminar producto")
+        print("3. Actualizar producto")
+        print("4. Buscar producto")
+        print("5. Mostrar todos los productos")
+        print("6. Salir")
+
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == '1':
+            id = input("Ingrese ID del producto: ")
+            nombre = input("Ingrese nombre del producto: ")
+            cantidad = int(input("Ingrese cantidad del producto: "))
+            precio = float(input("Ingrese precio del producto: "))
+            producto = Producto(id, nombre, cantidad, precio)
+            inventario.añadir_producto(producto)
+        elif opcion == '2':
+            id = input("Ingrese ID del producto a eliminar: ")
+            inventario.eliminar_producto(id)
+        elif opcion == '3':
+            id = input("Ingrese ID del producto a actualizar: ")
+            cantidad = input("Ingrese nueva cantidad (deje en blanco para no cambiar): ")
+            precio = input("Ingrese nuevo precio (deje en blanco para no cambiar): ")
+            cantidad = int(cantidad) if cantidad else None
+            precio = float(precio) if precio else None
+            inventario.actualizar_producto(id, cantidad, precio)
+        elif opcion == '4':
+            nombre = input("Ingrese nombre del producto a buscar: ")
+            resultados = inventario.buscar_producto(nombre)
+            for producto in resultados:
+                print(f"ID: {producto.get_id()}, Nombre: {producto.get_nombre()}, Cantidad: {producto.get_cantidad()}, Precio: {producto.get_precio()}")
+        elif opcion == '5':
+            inventario.mostrar_productos()
+        elif opcion == '6':
+            break
+        else:
+            print("Opción no válida, intente de nuevo.")
+
+menu()
+
+//Resumen de cambios:
+Almacenamiento en archivos: Modifiqué la clase Inventario para que guarde y recupere productos de un archivo de texto inventario.txt.
+
+Recuperación desde archivos: Los productos existentes se cargan automáticamente desde el archivo al iniciar el programa.
+
+Manejo de excepciones: Implementé el manejo de excepciones para tratar errores durante la manipulación de archivos, como FileNotFoundError y PermissionError.
+
+Interfaz de usuario: Actualicé la interfaz para notificar al usuario sobre el éxito o fallo de las operaciones de archivo.//
