@@ -1,0 +1,58 @@
+import tkinter as tk
+from tkinter import messagebox
+
+def agregar_dato():
+    dato = entrada_texto.get()
+    if dato.strip():
+        lista_datos.insert(tk.END, dato)
+        entrada_texto.delete(0, tk.END)
+    else:
+        messagebox.showwarning("Advertencia", "Por favor, ingrese un dato válido.")
+
+def limpiar_datos():
+    lista_datos.delete(0, tk.END)
+
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.title("Gestión de Datos")
+
+# Etiqueta de descripción
+etiqueta = tk.Label(ventana, text="Ingrese un dato:")
+etiqueta.pack(pady=5)
+
+# Campo de texto para entrada de datos
+entrada_texto = tk.Entry(ventana, width=30)
+entrada_texto.pack(pady=5)
+
+# Botón "Agregar"
+boton_agregar = tk.Button(ventana, text="Agregar", command=agregar_dato)
+boton_agregar.pack(pady=5)
+
+# Lista para mostrar los datos
+lista_datos = tk.Listbox(ventana, width=30, height=10)
+lista_datos.pack(pady=5)
+
+# Botón "Limpiar"
+boton_limpiar = tk.Button(ventana, text="Limpiar", command=limpiar_datos)
+boton_limpiar.pack(pady=5)
+
+# Ejecutar el bucle principal
+ventana.mainloop()
+
+
+Explicación del Código:
+Diseño de la Interfaz:
+
+La ventana principal tiene un título ("Gestión de Datos").
+
+Componentes: Label, Entry, Button, y Listbox.
+
+Funcionalidad:
+
+Agregar Dato: El campo de texto (Entry) permite ingresar datos. Al hacer clic en el botón "Agregar", el dato ingresado se agrega a la lista (Listbox).
+
+Limpiar Datos: El botón "Limpiar" elimina todos los elementos de la lista.
+
+Eventos:
+
+Los eventos de clic en los botones son manejados por las funciones agregar_dato y limpiar_datos.
