@@ -1,0 +1,85 @@
+import tkinter as tk
+from tkinter import ttk
+from tkinter import messagebox
+from tkcalendar import Calendar
+
+# Función para agregar eventos a la lista del TreeView
+def agregar_evento():
+    fecha = calendario.get_date()  # Obtiene la fecha seleccionada
+    hora = entrada_hora.get()  # Obtiene la hora ingresada
+    descripcion = entrada_desc.get()  # Obtiene la descripción ingresada
+    if fecha and hora and descripcion:  # Verifica que todos los campos estén llenos
+        tree.insert("", "end", values=(fecha, hora, descripcion))  # Agrega el evento al TreeView
+        entrada_hora.delete(0, tk.END)  # Limpia el campo de hora
+        entrada_desc.delete(0, tk.END)  # Limpia el campo de descripción
+    else:
+        messagebox.showwarning("Advertencia", "Por favor, complete todos los campos.")
+
+# Función para eliminar eventos seleccionados con confirmación
+def eliminar_evento():
+    seleccion = tree.selection()  # Obtiene los elementos seleccionados
+    if seleccion:
+        confirmacion = messagebox.askyesno("Confirmación", "¿Está seguro de que desea eliminar el evento seleccionado?")
+        if confirmacion:  # Si el usuario confirma, elimina los eventos seleccionados
+            for item in seleccion:
+                tree.delete(item)
+    else:
+        messagebox.showinfo("Información", "Seleccione un evento para eliminar.")
+
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.title("Agenda Personal")
+ventana.geometry("600x400")  # Establece tamaño de la ventana
+
+# Estilo personalizado para TreeView
+style = ttk.Style()
+style.configure("Treeview", rowheight=25, font=("Arial", 10))  # Cambia la altura y fuente de las filas
+style.configure("Treeview.Heading", font=("Arial", 12, "bold"))  # Cambia el estilo de los encabezados
+
+# Calendario para seleccionar fechas
+calendario = Calendar(ventana, selectmode="day", year=2025, month=3, day=23)
+calendario.pack(pady=10)
+
+# Campo de entrada para hora
+label_hora = tk.Label(ventana, text="Hora (HH:MM):", font=("Arial", 10))
+label_hora.pack()
+entrada_hora = tk.Entry(ventana, font=("Arial", 10))
+entrada_hora.pack()
+
+# Campo de entrada para descripción
+label_desc = tk.Label(ventana, text="Descripción:", font=("Arial", 10))
+label_desc.pack()
+entrada_desc = tk.Entry(ventana, font=("Arial", 10))
+entrada_desc.pack()
+
+# TreeView para mostrar eventos
+tree = ttk.Treeview(ventana, columns=("Fecha", "Hora", "Descripción"), show="headings", height=10)
+tree.heading("Fecha", text="Fecha")
+tree.heading("Hora", text="Hora")
+tree.heading("Descripción", text="Descripción")
+tree.column("Fecha", width=100, anchor="center")
+tree.column("Hora", width=100, anchor="center")
+tree.column("Descripción", width=250, anchor="w")
+tree.pack(pady=10)
+
+# Botones para acciones
+btn_agregar = tk.Button(ventana, text="Agregar Evento", font=("Arial", 10), bg="#4CAF50", fg="white", command=agregar_evento)
+btn_agregar.pack(pady=5)
+
+btn_eliminar = tk.Button(ventana, text="Eliminar Evento Seleccionado", font=("Arial", 10), bg="#f44336", fg="white", command=eliminar_evento)
+btn_eliminar.pack(pady=5)
+
+btn_salir = tk.Button(ventana, text="Salir", font=("Arial", 10), bg="#2196F3", fg="white", command=ventana.quit)
+btn_salir.pack(pady=5)
+
+# Comentarios explicativos
+"""
+- La función `agregar_evento` verifica que los campos de entrada estén completos y agrega un nuevo evento al TreeView.
+- La función `eliminar_evento` incluye un diálogo de confirmación antes de eliminar eventos seleccionados del TreeView.
+- El TreeView muestra los eventos en una tabla con columnas de Fecha, Hora y Descripción.
+- Se utiliza `ttk.Style` para personalizar el diseño de los componentes, como el TreeView y los botones.
+- Se recomienda mantener el código organizado en funciones para facilitar el mantenimiento y la ampliación.
+"""
+
+# Iniciar aplicación
+ventana.mainloop()
